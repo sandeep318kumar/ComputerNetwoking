@@ -1,0 +1,3 @@
+gcc p3.c -o p3
+
+gcc -o a.exe p1.c
