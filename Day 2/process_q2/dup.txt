@@ -1,0 +1,7 @@
+dup file opening
+blah blah
+hare krishna
+This will be output to the file named dup.txt
+This will also be output to the file named dup.txt
+This will be output to the file named dup.txt
+This will also be output to the file named dup.txt

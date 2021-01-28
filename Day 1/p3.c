@@ -4,7 +4,7 @@ int main()
 {
     printf("Now I am in program 3\n");
     printf("Going to program 4\n");
-    const char *a[] = {"./p4", NULL};
+    char *a[] = {"./p4", NULL};
     execv(a[0], a); 
     return 0;
 }

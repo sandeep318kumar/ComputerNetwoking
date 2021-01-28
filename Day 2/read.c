@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 // to read line by line
     // while (1)
     // {
-    //     char buf1[128];
+    //     char buf1[1];
     //     if(c > 0){
     //         printf("Parent Word: ");
     //         while(read(fd, buff, 1) != ' '){
