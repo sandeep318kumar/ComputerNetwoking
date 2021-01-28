@@ -1,2 +1,5 @@
-Don't try to be good in someone's eye's, 
-Try to be good in your actions.
+hare krishna
+This will be output to the file named dup.txt
+This will also be output to the file named dup.txt
+This will be output to the file named dup.txt
+This will also be output to the file named dup.txt
