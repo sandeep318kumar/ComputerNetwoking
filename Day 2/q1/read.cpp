@@ -1,5 +1,7 @@
-#include<bits/stdc++.h>
-#include <fstream> 
+// #include<bits/stdc++.h>
+
+#include<iostream>
+#include<string.h>
 #include<stdio.h> 
 #include<unistd.h> 
 #include<fcntl.h> 
@@ -15,7 +17,7 @@ using namespace std;
 
 
 int main(){    
-    int file_desc = open("mytext.txt", O_CREAT | O_RDONLY); 
+    int file_desc = open("in.txt",O_CREAT | O_RDONLY); 
     dup2(file_desc, 0) ;  
     string str;
     sem_unlink("/parent4");
@@ -29,15 +31,22 @@ int main(){
                 sem_wait(parent_semaphore);
                 getline(cin,str);
                 fflush(stdin);
-                cout << getpid() << str << "\n";
+                cout << "Parent: " << str << "\n";
                 fflush(stdout);
                 sem_post(child_semaphore);
                 sleep(1);
             }
         }
         else{
-            execvp("./p2a",NULL);
-            sleep(1);
+            while(cin){
+                sem_wait(child_semaphore);
+                getline(cin,str);
+                fflush(stdin);
+                cout << "child: " << str << "\n";
+                fflush(stdout);
+                sem_post(parent_semaphore);
+                sleep(1);
+            }
         }
     }
     sem_close(parent_semaphore);

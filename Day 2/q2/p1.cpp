@@ -1,8 +1,10 @@
-#include<bits/stdc++.h>
-#include <fstream> 
-#include<stdio.h> 
-#include<unistd.h> 
-#include<fcntl.h> 
+// #include<bits/stdc++.h>
+
+#include<iostream>
+#include<string.h>
+#include<stdio.h>
+#include<unistd.h>
+#include<fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -14,9 +16,9 @@
 using namespace std;
 
 
-int main(){    
-    int file_desc = open("mytext.txt", O_CREAT | O_RDONLY); 
-    dup2(file_desc, 0) ;  
+int main(){
+    int file_desc = open("dup.txt",O_CREAT | O_RDONLY);
+    dup2(file_desc, 0) ;
     string str;
     sem_unlink("/parent4");
     sem_unlink("/child4");
@@ -29,14 +31,14 @@ int main(){
                 sem_wait(parent_semaphore);
                 getline(cin,str);
                 fflush(stdin);
-                cout << getpid() << str << "\n";
+                cout << "Parent: " << str << "\n";
                 fflush(stdout);
                 sem_post(child_semaphore);
                 sleep(1);
             }
         }
         else{
-            execvp("./p2a",NULL);
+            execvp("./p2a", NULL);
             sleep(1);
         }
     }
