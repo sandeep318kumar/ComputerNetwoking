@@ -17,33 +17,36 @@ int main()
 {
     int A[2], B[2];
     pipe(A), pipe(B);
-    char buff[1024];
-    int fd1 = dup(0);
-
+    char buff1[1024], buff2[1024];
+    
+    int stdi = dup(STDIN_FILENO);
+    int stdo = dup(STDOUT_FILENO);
+    dup2(A[0], 0);
+    dup2(B[1], 1);
+   
     int c = fork();
-
     if(c > 0){
         close(B[1]);
         close(A[0]);
-            
-        int fd2 = dup(0);
-        dup2(fd1, 0);
-        // while(1){
-            cout<<"Type your message to child: ";
-            cin.getline(buff, 30);
-            dup2(fd2, 0);
-            write(A[1], buff, strlen(buff));
+        
+        dup2(stdi, STDIN_FILENO);
+        dup2(stdo, STDOUT_FILENO);
 
-            int bytesread = read(B[0], buff, 1024);
-            buff[bytesread] = 0;
-            cout<<"From child: "<<buff<<endl;
-        // }
-    } else{
+        while(1){
+            // cout<<"Type your message to child: ";
+            cin.getline(buff1, 1024);
+            // dup2(fd2, 0);
+            write(A[1], buff1, 1024);
+            cout<<"Parent wrote: "<<buff1<<endl;
+
+            read(B[0], buff2, 1024);
+            cout<<"Parent read: "<<buff2<<endl;
+            // cout<<"From child: "<<buff2<<endl;
+        }
         close(A[1]);
         close(B[0]);
-
-        dup2(A[0], 0);
-        // cout<<"child\n";
+    } else{
+        
         execv("./p2a", NULL);
     }
     

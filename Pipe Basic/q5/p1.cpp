@@ -14,13 +14,9 @@
 using namespace std;
 
 int A[2], B[2];
-// char buff[1024];
-
-// int fd1, fd2, fd3, fd4;
-char buff[1024];
 
 void* write_parent(void* argv){
-    // close(B[1]);
+
     while(1){
         // cout<<"Parent writing: \n";
         char buff[1024];
@@ -35,35 +31,11 @@ void* write_parent(void* argv){
 }
 
 void* read_parent(void* argv){
-    // close(A[0]);
+
     while(1){
         char buff[1024];
         read(B[0], buff, 1024);
-        // buff[bytesread] = 0;
         cout<<"Parent read: "<<buff<<endl;
-    }
-    return NULL;
-}
-
-void* write_child(void* argv){
-    // close(A[1])
-    while(1){
-        // cout<<"Child writing:\n";
-        char buff[1024];
-        cin.getline(buff, 1024);
-        cout<<"Child writing: "<<buff<<endl;
-        write(B[1], buff, strlen(buff));
-        fflush(stdin);
-    }
-    return NULL;
-}
-
-void* read_child(void* argv){
-    while(1){
-        char buff[1024];
-        int bytesread = read(A[0], buff, 1024);
-        buff[bytesread] = 0;
-        cout<<"Child read: "<<buff<<endl;
     }
     return NULL;
 }
@@ -71,26 +43,28 @@ void* read_child(void* argv){
 int main()
 {
     pipe(A), pipe(B);
+    char buff1[1024], buff2[1024];
+    int stdi = dup(STDIN_FILENO);
+    int stdo = dup(STDOUT_FILENO);
+    dup2(A[0], 0);
+    dup2(B[1], 1);
+
     int c = fork();
 
     if(c > 0){
         close(B[1]);
         close(A[0]);
-   
+        
+        dup2(stdi, STDIN_FILENO);
+        dup2(stdo, STDOUT_FILENO);
+
         pthread_t wp, rp;
         pthread_create(&wp, NULL, write_parent, NULL);
         pthread_create(&rp, NULL, read_parent, NULL);
         pthread_join(wp, NULL);
         pthread_join(rp, NULL);
     } else{
-        close(B[0]);
-        close(A[1]);
-
-        pthread_t wc, rc;
-        pthread_create(&rc, NULL, read_child, NULL);
-        pthread_create(&wc, NULL, write_child, NULL);
-        pthread_join(wc, NULL);
-        pthread_join(rc, NULL);
+        execv("./p2a", NULL);
     }
     
     return 0;

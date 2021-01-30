@@ -16,23 +16,27 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    char buff[1024];
-    cin.getline(buff, 1024);
-    cout<<"From Parent: "<<buff<<endl;
-    // cout<<argv<<endl;
-    // close(B[0]);
-    // close(A[1]);
+    char buff1[1024], buff2[1024];
+    int rd, wd;
+    rd = dup(STDIN_FILENO);
+    wd = dup(STDOUT_FILENO);
 
-    // while(1){
+    while(1){
 
-    //     int bytesread = read(A[0], buff, 1024);
-    //     buff[bytesread] = 0;
-            
-    //     cout<<"From Parent: "<<buff<<endl;
+        read(rd, buff1, 1024);
+        // cout<<"From Parent: "<<buff1<<endl;
+        cout<<"Child read: "<<buff1<<endl;
+        dup2(7, STDIN_FILENO);
+        dup2(8, STDOUT_FILENO);
 
-    //     cout<<"Type your message to Parent: ";
-    //     cin.getline(buff, 30);
-    //     write(B[1], buff, strlen(buff));
-    // }
+        memset(buff2,  0, sizeof(buff2));
+        cin.getline(buff2, 1024);
+        // cout<<"Type your message to Parent: "<<buff2;
+        
+        write(wd, buff2, 1024);
+        cout<<"Child write: "<<buff2<<endl;
+    }
+    close(rd);
+    close(wd);
     return 0;
 }
