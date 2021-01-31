@@ -1,5 +1,3 @@
-//one way communication using thread and pipe
-
 #include<unistd.h>
 #include<stdlib.h>
 #include<stdio.h>
@@ -18,6 +16,7 @@ void* p1(void* argv){
 		cout<<"Writing in parent:"<<val<<endl;
 		sleep(1);
 	}
+	
 }
 void* p2(void* argv){
 	int val;
@@ -60,7 +59,7 @@ int main(){
 		pthread_join(t1,NULL);
 		pthread_join(t2,NULL);
 	}
-	else{
+	else {
 		close(fd2[0]);
 		close(fd1[1]);
 		pthread_t t1,t2;

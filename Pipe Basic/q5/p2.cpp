@@ -52,5 +52,6 @@ int main()
     pthread_create(&wc, NULL, write_child, NULL);
     pthread_join(wc, NULL);
     pthread_join(rc, NULL);
+
     return 0;
 }

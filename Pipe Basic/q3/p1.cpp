@@ -14,9 +14,6 @@
 using namespace std;
 
 int A[2], B[2];
-// char buff[1024];
-
-// int fd1, fd2, fd3, fd4;
 char buff[1024];
 
 void* write_parent(void* argv){
