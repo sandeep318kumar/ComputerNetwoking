@@ -17,62 +17,68 @@
 #include <csignal>
 #include<wait.h> 
 #include<signal.h> 
+#include<sys/ipc.h>
+#include<sys/shm.h>
+#include<string.h>
 using namespace std;
 
-int x = 5, y;
-int sfd, xfd, yfd;
+#define FILLED 0 
+#define Ready 1 
+#define NotReady -1 
 
-void handler(int sig){
-    cout<<"Got signal from P2\n";
-    char stry[20] = {'\0'};
-    read(yfd, stry, 20);
-    y = atoi(stry);
-    cout<<"Got this value of y = "<<y<<endl;
-}
+struct memory { 
+    char strx[100];
+    char stry[100];
+	int status, pid1, pid2; 
+}; 
+
+struct memory* shmptr; 
+
+int x , y = 5;
+void handler(int signum) 
+{ 
+	if (signum == SIGUSR1) { 
+		printf("Received User2: "); 
+		cout<<shmptr->stry<<endl;
+        y = atoi(shmptr->stry); 
+	} 
+} 
+
 int main() 
-{
-    signal(SIGUSR2, handler);
-    
-    pid_t p1 = getpid(), p2;
-    char* myfifo = "/tmp/share";
-    mkfifo(myfifo, 0666);
-    sfd = open(myfifo, O_RDWR);
+{ 
+	int pid = getpid(); 
+	int shmid; 
+	int key = 12345; 
 
-    char* xfifo = "/tmp/x";
-    mkfifo(xfifo, 0666);
-    xfd = open(xfifo, O_RDWR);
+	shmid = shmget(key, sizeof(struct memory), IPC_CREAT | 0666); 
 
-    char* yfifo = "/tmp/y";
-    mkfifo(yfifo, 0666);
-    yfd = open(yfifo, O_RDWR);
+	shmptr = (struct memory*)shmat(shmid, NULL, 0); 
 
-    char sp1[6] = {'\0'};
-    sprintf(sp1, "%d", p1);
-        
-    write(sfd, sp1, 6);
-    cout<<"your process id is: "<<sp1<<endl;
+	shmptr->pid1 = pid; 
+	shmptr->status = NotReady; 
+    sprintf(shmptr->stry, "%d", 5);
 
-    char buff[6] = {'\0'};
-    read(sfd, buff, 6);
-    p2 = atoi(buff);
-    cout<<"other Process id is: "<<p2<<endl;
+	signal(SIGUSR1, handler); 
 
-    char strx[20] = {'\0'};
-    sprintf(strx, "%d", x);
-    write(xfd, strx, 20);
-    // cout<<"P1 wrote x = "<<x<<endl;
-    while(1){
-        kill(p2, SIGUSR1);
-        
-        char buff1[100];
-        cin.getline(buff1, 100);
-        int in = atoi(buff1);
+	while (1) { 
+		while (shmptr->status != Ready) 
+			continue; 
+		sleep(1); 
+
+		printf("User1: "); 
+        char buff[100];
+        cin.getline(buff, 100);
+        int in = atoi(buff);
 
         x = y + in;
-        char strx[20] = {'\0'};
-        sprintf(strx, "%d", x);
-        write(xfd, strx, 20);
-        // cout<<"P1 wrote x = "<<x<<endl;
-    }
-    
-}
+        sprintf(shmptr->strx, "%d", x);
+
+		shmptr->status = FILLED; 
+
+		kill(shmptr->pid2, SIGUSR2); 
+	} 
+
+	shmdt((void*)shmptr); 
+	shmctl(shmid, IPC_RMID, NULL); 
+	return 0; 
+} 

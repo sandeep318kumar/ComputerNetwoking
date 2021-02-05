@@ -39,7 +39,6 @@ int main()
     else{
         signal(SIGUSR1, handler2); 
         cout<<"in child\n";
-        // cout<<"Child id is: "<<getpid()<<" Parent pid is: "<<getppid()<<endl;
        
         kill(getppid(), SIGUSR1); 
         while(1) ;  
