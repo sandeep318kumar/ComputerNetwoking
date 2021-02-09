@@ -1,0 +1,12 @@
+A process P1 has to create a message queue and places several messages on the queue for processes P2 (type as 2 ) and P3 ( type as 3 ) 
+and inquire about the state of the queue with msgctl(), 
+and prints the many details of the message queue. 
+Now Process P2 and P3 will read few of their messages. 
+Now again process P1 has to inquire about the state of the queue with msgctl(), 
+and prints the many details of the message queue. Next Process P1 has to do the below: 
+It has to use msgctl() to alter (change ) a message on the queue. 
+Something like it mayhavv eto change the text of a message. 
+And check whether the change has occurred by printing all the messages of the queue without msgrcv().
+P has to use msgctl() to delete a message from the queue, 
+then print all the messages of the queue to check whether a message has been deleted. 
+Note that the message queue contents should not be changed after printing all the messages by using msgctl().
