@@ -17,7 +17,7 @@ using namespace std;
 
 
 int main(){    
-    int file_desc = open("in.txt",O_CREAT | O_RDONLY); 
+    int file_desc = open("in.txt", O_CREAT | O_RDONLY); 
     dup2(file_desc, 0) ;  
     string str;
     sem_unlink("/parent4");

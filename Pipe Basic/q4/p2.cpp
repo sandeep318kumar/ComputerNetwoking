@@ -13,7 +13,6 @@
 #include <fcntl.h>
 using namespace std;
 
-
 int main(int argc, char* argv[])
 {
     char buff1[1024], buff2[1024];
@@ -22,7 +21,6 @@ int main(int argc, char* argv[])
     wd = dup(STDOUT_FILENO);
 
     while(1){
-
         read(rd, buff1, 1024);
         // cout<<"From Parent: "<<buff1<<endl;
         cout<<"Child read: "<<buff1<<endl;

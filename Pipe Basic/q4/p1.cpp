@@ -46,7 +46,6 @@ int main()
         close(A[1]);
         close(B[0]);
     } else{
-        
         execv("./p2a", NULL);
     }
     

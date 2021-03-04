@@ -38,12 +38,17 @@ void* read_child(void* argv){
 }
 int main()
 {
-
+    
     char buff1[1024], buff2[1024];
-
+    // cout<<STDIN_FILENO<<endl;
+    // cout<<STDOUT_FILENO<<endl;
+    
     rfd = dup(STDIN_FILENO);
     wfd = dup(STDOUT_FILENO);
 
+    // cout<<STDIN_FILENO<<endl;
+    // cout<<STDOUT_FILENO<<endl;
+    
     dup2(7, STDIN_FILENO);
     dup2(8, STDOUT_FILENO);
 

@@ -14,8 +14,6 @@ int main()
 	// FIFO file path 
 	char * myfifo = "/tmp/hello"; 
 
-	// Creating the named file(FIFO) 
-	// mkfifo(<pathname>,<permission>) 
 	mkfifo(myfifo, 0666); 
     fd1 = open(myfifo, O_RDONLY);
     char buff[100];
